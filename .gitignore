@@ -1,0 +1,40 @@
+# Build directories
+/build/
+/bin/
+/out/
+
+# CMake files
+CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+
+# Compiled object files
+*.o
+*.obj
+
+# Binaries
+*.exe
+*.out
+*.app
+
+# Dependency directories
+/vcpkg_installed/
+/third_party/
+/external/
+
+# IDE-specific files
+*.vs/
+*.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# User-specific files
+*.user
+*.suo
+*.userprefs
