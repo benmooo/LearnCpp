@@ -1,4 +1,5 @@
 // <> for std lib and "" for user defined headers or files in the same project
+#include <functional>
 #include <iostream>
 
 // the #define preprocessor directive is used to define constants and it is just
@@ -31,8 +32,16 @@ void testMultipleDimensionalArray();
 void testArrayAsArguments();
 void testLibArray();
 
+void testCharSequence();
+
+void testPointer();
+void testPointer2();
+void testPointerAndArray();
+
+void testEnums();
+
 int main() {
-    testLibArray();
+    testEnums();
     return 0;
 }
 
@@ -338,4 +347,422 @@ void testLibArray() {
     for (int item : foo) {
         cout << item << endl;
     }
+}
+
+void testCharSequence() {
+    // the following two declarations are equivalent which means that the string
+    // literal is literal constants. and their type a null-terminated array of
+    // chars.
+    char foo[] = {'a', 'b', 'c', '\0'};
+    char bar[] = "abc";
+
+    // array of chars with null terminated vs string
+    // arrays have a fixed size that needs to be specified either explictitly or
+    // implicitly when declared. questions have exactly 29 characters. while
+    // string are simple strings, no size is specified. this is because strings
+    // have a dynamic size determined during runtime. while the size of arrays
+    // is determined by compile time, before the program runs.
+
+    char questions[] = "What is the meaning of life?";
+    string question2 = "where do you live";
+
+    // in any case, null-terminated character sequence and strings can be
+    // transform from one another
+    char myntcs[] = "hellow world";
+    string myString = myntcs; // implicitly convert null-terminated character
+                              // sequence to string
+    const char *cPtr = myString.c_str(); // explicit conversion to
+                                         // null-terminated character sequence
+}
+
+// pointers
+// pointers are variables that store the memory address of another variable.
+// they are used to indirectly access the value of the variable they point to.
+// pointers are declared using the * operator, and they can be dereferenced
+// using the * operator.
+//
+// address of operator &
+// the address of operator & returns the memory address of the varable it it
+// applied to.
+//
+// dereference operator *
+// the dereference operator * returns the value stored at the memeory address it
+// is applied to.
+//
+// declaration of pointers
+// type * name
+// int * number
+// double * decimal
+// char * character
+// note that the asterisk is used when declaring a pointer only means it's a
+// pointer and should not be confused with the dereference operator *. They are
+// different things.
+
+void testPointer() {
+    int firstValue, secondValue;
+    int *myPointer;
+
+    myPointer = &firstValue;
+    *myPointer = 10;
+    myPointer = &secondValue;
+    *myPointer = 20;
+
+    cout << "first value: " << firstValue << endl;
+    cout << "second value: " << secondValue << endl;
+}
+
+void testPointer2() {
+    int firstValue = 5, secondValue = 15;
+    int *p1, *p2;
+
+    p1 = &firstValue;
+    p2 = &secondValue;
+
+    *p1 = 10;  // firstValue = 10
+    *p2 = *p1; // secondValue = 10
+    p1 = p2;   // now p1 points to secondValue;
+
+    *p1 = 20; // secondValue = 20
+    cout << "first value: " << firstValue << endl;
+    cout << "second value: " << secondValue << endl;
+}
+
+// Pointers and arrays
+// The concept of array is related to pointers. In fact, array works very much
+// like pointers to their first element. and array can be implicitly converted
+// to pointers of the proper type
+
+void testPointerAndArray() {
+    // int arr[] = {1, 2, 3, 4, 5};
+    // int *p;
+
+    // p = arr; // implicitly convert array to pointer
+
+    // and p and arr are equivalent and would have very similar properties. The
+    // main difference is that p can be assigned to another pointer of the same
+    // type, while arr can never be re-assigned. and always represent the same
+    // block of 5 elements of type int.
+
+    // arr = p; // thus, this is invalid.
+
+    int numbers[5];
+    int *p;
+    p = numbers;
+    *p = 10; // the first element of numbers is 10
+
+    p++;     // increment the pointer, now it points to the second element of
+             // numbers
+    *p = 20; // the second element of numbers is 20
+    p = &numbers[2]; // now p points to the third element of numbers
+    *p = 30;         // the third element of numbers is 30
+    p = numbers + 3; // now p points to the fourth element of numbers
+    *p = 40;
+
+    p = numbers;   // now p points to the first element of numbers
+    *(p + 4) = 50; // the fifth element of numbers is 50
+
+    for (int elem : numbers) {
+        cout << elem << endl;
+    }
+
+    // pointers and arrays support the same set of operations, with the same
+    // meaning for both.The main difference is that pointers can be assigned new
+    // addresses, while arrays can not.
+
+    // we often make assumptions about array brackets as specifying the index of
+    // an element of the array. well, in fact these brackets are a differenceing
+    // operator knows as the offset operator. they dereference the variable they
+    // follow just as * does, but they also add the number between brackets to
+    // the address being dereferenced. for example:
+    //
+
+    numbers[3] = 0;
+    *(numbers + 3) = 0;
+    // both of the above lines are equivalent either numbers is an array or a
+    // pointer, and mean the same thing
+    //
+    // Remember that if an array, its name can be used as a pointer to its first
+    // element.
+}
+
+// Pointer initialization;
+void testPointerInitialization() {
+    int myVar;
+    int *foo = &myVar;
+    int *bar = foo;
+}
+
+// Pointer arithmetics
+// Pointers can be added and subtracted to point to the next element
+
+void testPointerArithmetics() {
+    char *charP;   // say 1000
+    short *shortP; // 2000
+    long *longP;   // 3000
+
+    charP++;  // size char is 1 byte, now charP points to 1001
+    shortP++; // size short is 2 bytes, now shortP points to 2002
+    longP++;  // size long is 4 bytes, now longP points to 3004
+
+    // which is same as
+    charP += 1;
+    shortP += 1;
+    longP += 1;
+
+    char *p;
+    *p++ = *charP++; // which is smae as *(p++) = *(charP++)
+    // which is same as the following
+    *p = *charP;
+    ++p;
+    ++charP;
+}
+
+// Pointers and constants
+
+void testPointerAndConstants() {
+    int x;
+    int y = 10;
+    const int *p = &y;
+    x = *p; // ok: reading p
+    // *p = x; // error: modifying p, which is const-qualified
+
+    // one of the use case of pointers of const elements is function parameters:
+    // a function that takes pointers to non-const as parameters can modify the
+    // value passed as argument. while a funciton that takes pointers to const
+    // can not.
+
+    // function pointers
+}
+
+// dynamic memory allocation
+void testDynamicMemoryAllocation() {
+    int *p = new int; // allocate memory for an integer
+    *p = 10;          // assign value to the memory location
+    delete p;         // deallocate the memory
+
+    int *p1 = new int[10];
+    for (int i = 0; i < 10; i++) {
+        p1[i] = i; // assign values to the memory locations
+    }
+    delete[] p1; // deallocate the memory
+}
+
+void testDynamicMemoryAllocation2() {
+    // Notice how the value within brackets in the new statement is a variable
+    // value entered by the user (i), not a constant expression:
+    int i, n;
+    int *p;
+    cout << "How many numbers would you like to type? ";
+    cin >> i;
+    p = new (nothrow) int[i];
+    if (p == nullptr)
+        cout << "Error: memory could not be allocated";
+    else {
+        for (n = 0; n < i; n++) {
+            cout << "Enter number: ";
+            cin >> p[n];
+        }
+        cout << "You have entered: ";
+        for (n = 0; n < i; n++)
+            cout << p[n] << ", ";
+        delete[] p;
+    }
+}
+
+// Structures
+struct Movie {
+    string title;
+    int year;
+};
+
+void testStructures() {
+    Movie movie1 = {"The Shawshank Redemption", 1994};
+
+    // pointers to structures
+    Movie *movie2 = &movie1;
+
+    movie2->title = "The Godfather"; // which is equivalent to (*movie2).title =
+                                     // "The Godfather";
+    movie2->year = 1972;
+}
+
+// nested structures
+struct Address {
+    string street;
+    string city;
+    string state;
+    int zip;
+};
+
+struct Person {
+    string name;
+    int age;
+    Address *address;
+};
+
+void testNestedStructures() {
+    Address address1 = {"123 Main St", "Anytown", "CA", 12345};
+    Person person1 = {"John Doe", 30, &address1};
+
+    // pointers to nested structures
+    Person *person2 = &person1;
+
+    person2->name = "Jane Doe";
+    person2->age = 25;
+    person2->address->street = "456 Elm St";
+    person2->address->city = "Anytown";
+    person2->address->state = "NY";
+    person2->address->zip = 67890;
+}
+
+// type aliasing : typedef & using
+typedef int i32;
+typedef unsigned int u32;
+typedef unsigned long long u64;
+typedef char *pChar;
+typedef char field[50];
+
+//  a second syntax to define type aliases was introduced in the C++
+using f32 = float; // C++11 feature
+
+void testTypeAliasing() {
+    i32 a = -10;
+    u32 b = 100;
+    char ch = 'a';
+    pChar c = &ch;
+    field name;
+    f32 f;
+}
+
+// Unions allow one portion of memory to be accessed as different data types.
+// Its declaration and use is similar to the one of structures, but its
+// functionality is totally different: The size of this type is the one of the
+// largest member element.
+//
+// When unions are members of a class (or structure), they can be declared with
+// no name. In this case, they become anonymous unions, and its members are
+// directly accessible from objects by their member names.
+struct Book1 {
+    char title[50];
+    char author[50];
+    union {
+        float dollars;
+        int yen;
+    } price;
+} book1;
+struct Book2 {
+    char title[50];
+    char author[50];
+    union {
+        float dollars;
+        int yen;
+    };
+} book2;
+void testUnions() {
+    book1.price.dollars = 10.5;
+    book2.dollars = 10.5;
+}
+
+// Enums
+enum Color { RED, GREEN, BLUE };
+
+enum Months {
+    JANUARY = 1,
+    FEBRUARY,
+    MARCH,
+    APRIL,
+    MAY,
+    JUNE,
+    JULY,
+    AUGUST,
+    SEPTEMBER,
+    OCTOBER,
+    NOVEMBER,
+    DECEMBER
+} y2k;
+
+// enum types with enum class
+enum class Colors { BLACK, BLUE, GREEN, CYAN, RED, PURPLE, YELLOW, WHITE };
+
+// Enumerated types declared with enum class also have more control over their
+// underlying type; it may be any integral data type, such as char, short or
+// unsigned int, which essentially serves to determine the size of the type.
+// This is specified by a colon and the underlying type following the enumerated
+// type
+enum class EyeColor : char { BLUE, GREEN, BROWN, BLACK };
+
+void testEnums() {
+    Color c = RED;
+    cout << "c is " << c << endl;
+    y2k = DECEMBER;
+}
+
+// class
+class Rectangle {
+    int width, height;
+
+  public:
+    void set_values(int w, int h);
+    int area();
+};
+
+void Rectangle::set_values(int w, int h) {
+    width = w;
+    height = h;
+}
+
+int Rectangle::area() { return width * height; }
+
+class Circle {
+    float radius;
+
+  public:
+    Circle(float);
+    Circle();
+    float area();
+};
+
+// construct overloading
+Circle::Circle(float r) { radius = r; }
+Circle::Circle() { radius = 1; }
+float Circle::area() { return 3.14 * radius * radius; }
+
+void testClass() {
+    Circle circle; // ok, default constructor called
+    // Circle circle1(); // oops, default constructor NOT called
+}
+
+class Dummy {
+  public:
+    bool isitme(Dummy &param);
+};
+
+bool Dummy::isitme(Dummy &param) {
+    if (&param == this)
+        return true;
+    else
+        return false;
+}
+
+int add(const int &a, const int &b) {
+    return a + b;
+}
+
+int add(const int *a, const int *b) {
+    return *a + *b;
+}
+
+// type conversion
+void testTypeConversion() {
+    int a = 10;
+    float b = 3.14;
+    double c = 2.71828;
+    char d = 'a';
+    bool e = true;
+    string f = "Hello, World!";
+
+    // implicit conversion
+    int i = a + b;
+    long g;
+    g = a;
 }
